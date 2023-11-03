@@ -22,4 +22,8 @@ spec:
         name: {{ .Values.app.name }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources: {}
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+
 status: {}

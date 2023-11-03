@@ -41,12 +41,19 @@ deploy-elasticsearch:
 		--set persistence.enabled=false \
 		--set service.type=NodePort
 
-deploy-fluentd:
+create-fluentd-config:
+	kubectl create configmap custom-fluentd-config --from-file=custom-fluentd.conf
+
+delete-fluentd-config:
+	kubectl delete configmap custom-fluentd-config
+
+deploy-fluentd: create-fluentd-config
 	helm install fluentd bitnami/fluentd \
 		--set elasticsearch.host=elasticsearch-master \
 		--set resources.requests.memory="200Mi" \
 		--set resources.requests.cpu="100m" \
-		--set replicas=1
+		--set replicas=1 \
+		--set configMap=custom-fluentd-config
 
 deploy-kibana:
 	helm install kibana-new elastic/kibana \
@@ -62,18 +69,19 @@ get-kibana-creds:
 # Combined targets
 deploy-efk: deploy-elasticsearch deploy-fluentd deploy-kibana
 
-deploy-all: deploy-serviceA deploy-serviceB deploy-efk
+deploy-services: deploy-serviceA deploy-serviceB
+
+deploy-all: deploy-services deploy-efk
 
 # Clean up
 clean:
-	helm uninstall $(HELM_RELEASE_A)
-	helm uninstall $(HELM_RELEASE_B)
 	helm uninstall elasticsearch
 	helm uninstall fluentd
-	helm uninstall kibana
+	helm uninstall kibana-new
+	delete-fluentd-config
 
 # Delete kind cluster
 delete-cluster:
 	kind delete cluster --name $(CLUSTER_NAME)
 
-.PHONY: create-cluster build-serviceA build-serviceB load-serviceA load-serviceB deploy-serviceA deploy-serviceB deploy-elasticsearch deploy-fluentd deploy-kibana deploy-efk deploy-all clean delete-cluster get-kibana-creds
+.PHONY: create-cluster build-serviceA build-serviceB load-serviceA load-serviceB deploy-serviceA deploy-serviceB deploy-services deploy-elasticsearch deploy-fluentd deploy-kibana deploy-efk deploy-all clean delete-cluster get-kibana-creds
