@@ -20,7 +20,7 @@ make deploy-all
 
 For a detailed walkthrough of this project, including step-by-step instructions and explanations, check out our Medium blog post:
 
-📘 [Kubernetes Observability: EFK Stack Deployment Guide]([https://medium.com/@yourusername/mastering-kubernetes-monitoring-with-efk-stack-a-step-by-step-guide-123456](https://medium.com/@kishorchukka/kubernetes-observability-efk-stack-deployment-guide-2ed762cc5e84))
+📘 [Kubernetes Observability: EFK Stack Deployment Guide](https://medium.com/@yourusername/mastering-kubernetes-monitoring-with-efk-stack-a-step-by-step-guide-123456)
 
 ## Repository Structure
 
